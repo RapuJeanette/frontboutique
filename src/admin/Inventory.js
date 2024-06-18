@@ -10,7 +10,6 @@ function Inventory() {
   useEffect(() => {
     personaService.getProducto().then(data =>  {
       setproduct(data);
-      console.log(data);
       
     }).catch(error => {
       console.error("Error fetching categories:", error);

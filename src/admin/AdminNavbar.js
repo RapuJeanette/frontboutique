@@ -30,7 +30,7 @@ function AdminNavbar() {
           <Link to="/admin/Venta">Ventas</Link>
         </li>
         <li className={location.pathname === '/admin/purchase-history' ? 'active' : ''}>
-          <Link to="/admin/purchase-history">Historial de Compras</Link>
+          <Link to="/admin/purchase-history">Compras</Link>
         </li>
         <li className={location.pathname === '/admin/return-product' ? 'active' : ''}>
           <Link to="/admin/return-product">Devoluciones</Link>

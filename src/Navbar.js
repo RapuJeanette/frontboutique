@@ -2,10 +2,12 @@ import React, { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './App.css';
 import { CartContext } from './CartContext';
-import { FaShoppingCart, FaUser, FaSearch } from 'react-icons/fa';
+import { FaShoppingCart, FaUser, FaSearch, FaSignOutAlt } from 'react-icons/fa';
+import { AuthContext } from './AuthProvider';
 
 function Navbar() {
   const { cartCount, searchProducts } = useContext(CartContext);
+  const { token, logout } = useContext(AuthContext);
   const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
 
@@ -13,6 +15,11 @@ function Navbar() {
     e.preventDefault();
     searchProducts(searchQuery);
     navigate('/search');
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
   };
 
   return (
@@ -47,9 +54,15 @@ function Navbar() {
           </button>
         </form>
         <div className="navbar-icons">
-          <Link to="/login" className="navbar-icon">
-            <FaUser />
-          </Link>
+        {!token ? (
+            <Link to="/login" className="navbar-icon">
+              <FaUser />
+            </Link>
+          ) : (
+            <button onClick={handleLogout} className="navbar-icon">
+              <FaSignOutAlt />
+            </button>
+          )}
           <Link to="/cart" className="navbar-icon">
             <FaShoppingCart />
             {cartCount > 0 && <span className="cart-count">{cartCount}</span>}

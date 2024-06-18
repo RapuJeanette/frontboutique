@@ -5,6 +5,10 @@ export class PersonaService{
         return axios.get(this.baseUrl + "catalogos").then(res => res.data);
     }
 
+    getDevolucion(){
+        return axios.get(this.baseUrl + "devoluciones").then(res => res.data);
+    }
+
     getimagen(){
         return axios.get(this.baseUrl + 'uploads').then(res=> res.data);
     }
@@ -12,6 +16,15 @@ export class PersonaService{
     getInfoProduct(id) {
         const url = `${this.baseUrl}productos/ver/${id}`;
         return axios.get(url).then(res => res.data);
+    }
+
+    getUsuarios(id) {
+        const url = `${this.baseUrl}auth/${id}`;
+        return axios.get(url).then(res => res.data);
+    }
+
+    getCompras(){
+        return axios.get(this.baseUrl + "compras").then(res => res.data);
     }
 
     saveP(productos){

@@ -1,7 +1,8 @@
-import React, { useState , useEffect} from 'react';
+import React, { useState , useEffect, useContext} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Login.css';
 import { PersonaService } from '../PersonaAPI';
+import { AuthContext } from '../AuthProvider';
 
 function Login() {
   const [user, setAllUsers] = useState('');
@@ -9,6 +10,7 @@ function Login() {
   const [email, setEmail] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const { login } = useContext(AuthContext);
   const navigate = useNavigate();
   const personaService = new PersonaService();
 
@@ -16,7 +18,7 @@ function Login() {
     personaService.getUser().then(data =>  {
       setAllUsers(data);
     }).catch(error => {
-      console.error("Error fetching categories:", error);
+      console.error("Error fetching Usuarios:", error);
     });
   }, [personaService, setAllUsers]);
 
@@ -25,9 +27,9 @@ function Login() {
     const users = user.find(user => user.username === email && user.password === password);
     
     if (users) {
+      login(users);
       setSuccessMessage('Ingreso exitoso');
       setErrorMessage('');
-      console.log(users);
       setTimeout(() => {
         navigate('admin/*'); // Navega a la página de inicio
       }, 1000);
@@ -35,8 +37,6 @@ function Login() {
       setErrorMessage('Correo electrónico o contraseña incorrectos');
       setSuccessMessage('');
     }
-    console.log('Correo electrónico:', email);
-    console.log('Contraseña:', password);
   };
 
   return (

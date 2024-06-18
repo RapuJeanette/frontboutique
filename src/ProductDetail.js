@@ -13,7 +13,6 @@ function ProductDetail() {
   const personaService = new PersonaService();
 
   useEffect(() => {
-    // Aquí podrías cargar los detalles del producto usando el id
     personaService.getInfoProduct(id).then(data =>  {
       setproduct(data);      
     }).catch(error => {

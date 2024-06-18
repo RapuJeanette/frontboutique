@@ -1,11 +1,11 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { CartContext } from '../CartContext';
+import React, { useState, useEffect } from 'react';
 import { PersonaService } from '../PersonaAPI';
+import axios from 'axios';
 
 function Ventas() {
   const [usuarios, setUsuarios] = useState([]);
   const [vendedorId, setVendedorId] = useState('');
-  const [venta, setVentas ] = useState([]);
+  const [venta, setVentas] = useState([]);
   const [products, setproduct] = useState([]);
   const [clienteId, setClienteId] = useState('');
   const [montoPagado, setMontoPagado] = useState('');
@@ -72,6 +72,24 @@ function Ventas() {
     }
   };
 
+  const handleDevolucion = async (ventaId) => {
+    try {
+      await axios.post('http://localhost:8081/devoluciones/crear', { productoId: ventaId }).then(
+        responde => {
+          console.log('Resouesta del servidor:', responde.data);
+        }).catch(error => {
+          if (error.responde) {
+            console.error('Error en la respuesta del servidor:', error.responde.data);
+          }
+        })
+      await axios.delete(`http://localhost:8081/ventas/${ventaId}`);
+      alert('Devolución realizada con éxito.');
+    } catch (error) {
+      console.error('Error al realizar la devolución:', error);
+      alert('Error al realizar la devolución.');
+    }
+  };
+
   return (
     <div>
       <h2>Realizar Venta</h2>
@@ -125,44 +143,55 @@ function Ventas() {
         <div className="form-group">
           <label>Estado de Pago</label>
           <div>
-                        <input
-                            type="checkbox"
-                            id="pagoCompleto"
-                            checked={pagoCompleto}
-                            onChange={(e) => setPagoCompleto(e.target.checked)}
-                        />
-                        <label htmlFor="pagoCompleto">Pago Completo</label>
-                    </div>
-                    <div>
-                        <input
-                            type="checkbox"
-                            id="pagoParcial"
-                            checked={pagoParcial}
-                            onChange={(e) => setPagoParcial(e.target.checked)}
-                        />
-                        <label htmlFor="pagoParcial">Pago Parcial</label>
-                    </div>
+            <input
+              type="checkbox"
+              id="pagoCompleto"
+              checked={pagoCompleto}
+              onChange={(e) => setPagoCompleto(e.target.checked)}
+            />
+            <label htmlFor="pagoCompleto">Pago Completo</label>
+          </div>
+          <div>
+            <input
+              type="checkbox"
+              id="pagoParcial"
+              checked={pagoParcial}
+              onChange={(e) => setPagoParcial(e.target.checked)}
+            />
+            <label htmlFor="pagoParcial">Pago Parcial</label>
+          </div>
         </div>
         <button onClick={() => handleRealizarVenta}>Realizar Venta</button>
       </form>
 
-      <div>
+      <div className="inventory">
         <h3>Ventas Realizadas</h3>
-        <ul>
-          {venta.map((venta) => (
-            <li key={venta.id}>
-              <div>
-                <p><strong>Vendedor:</strong> {venta.vendedorId}</p>
-                <p>
-                  <strong>Cliente:</strong> {venta.clienteId}</p>
-                <p><strong>Total:</strong> {venta.total}</p>
-                <p><strong>Fecha:</strong> {venta.fecha}</p>
-                <p><strong>Monto Pago:</strong> {venta.montoPagado}</p>
-                <p><strong>Estado de Pago:</strong> {venta.estadoPago}</p>
-              </div>
+        <div className="inventory-list">
+          <ul>
+            <li className="inventory-header">
+              <span>Vendedor</span>
+              <span>Cliente</span>
+              <span>MontoPagado</span>
+              <span>Total</span>
+              <span>Fecha</span>
+              <span>Estado de Pago</span>
+              <span>Acciones</span>
             </li>
-          ))}
-        </ul>
+            {venta.map((venta) => (
+              <li key={venta.id} className="inventory-item">
+                <span>{venta.vendedorId}</span>
+                <span>{venta.clienteId}</span>
+                <span>{venta.montoPagado}</span>
+                <span>{venta.total}</span>
+                <span>{venta.fecha}</span>
+                <span>{venta.estadoPago}</span>
+                <span>
+                  <button onClick={() => handleDevolucion(venta.id)} className="btn-devolucion">Devolución</button>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );

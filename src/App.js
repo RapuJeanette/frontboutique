@@ -13,33 +13,40 @@ import AdminDashboard from './admin/AdminDashboard';
 import SearchResults from './SearchResults';
 import PurchaseHistory from './admin/PurchaseHistory';
 import ReturnProduct from './admin/ReturnProduct';
-import AdminProducts from './admin/AdminProducts'; 
+import AdminProducts from './admin/AdminProducts';
 import { CartProvider } from './CartContext';
+import { AuthProvider } from './AuthProvider';
+import PrivateRoute from './PrivateRoute';
 
 function App() {
   return (
-    <CartProvider>
-      <Router>
-        <div className="App">
-          <Navbar />
-          <Routes>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/products" element={<ProductList />} />
-            <Route path="/product/:id" element={<ProductDetail />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/checkout" element={<Checkout />} />
-            <Route path="/admin/*" element={<AdminDashboard />} />
-            <Route path="purchase-history" element={<PurchaseHistory />} />
-            <Route path="return-product" element={<ReturnProduct />} />
-            <Route path="products" element={<AdminProducts />} />
-            <Route path="/search" element={<SearchResults />} />
-            <Route path="*" element={<Navigate to="/admin" />} />
-          </Routes>
-        </div>
-      </Router>
-    </CartProvider>
+    <AuthProvider>
+      <CartProvider>
+        <Router>
+          <div className="App">
+            <Navbar />
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route element={<PrivateRoute />}>
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/products" element={<ProductList />} />
+                <Route path="/product/:id" element={<ProductDetail />} />
+                <Route path="/cart" element={<Cart />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/checkout" element={<Checkout />} />
+                <Route path="purchase-history" element={<PurchaseHistory />} />
+                <Route path="return-product" element={<ReturnProduct />} />
+                <Route path="/search" element={<SearchResults />} />
+                <Route path="/admin/*" element={<AdminDashboard />} />
+                <Route path="products" element={<AdminProducts />} />
+                <Route path="*" element={<Navigate to="/admin" />} />
+              </Route>
+
+            </Routes>
+          </div>
+        </Router>
+      </CartProvider>
+    </AuthProvider>
   );
 }
 
